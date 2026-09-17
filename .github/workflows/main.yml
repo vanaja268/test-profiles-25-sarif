@@ -1,0 +1,83 @@
+name: CI
+
+env:
+  SONAR_SCANNER_VERSION: 5.0.1.3006
+
+on:
+  push:
+    branches:
+      - "*"
+    paths-ignore:
+      - "src/test/java/**"
+      - "target/**"
+
+  pull_request:
+    branches:
+      - "*"
+    paths-ignore:
+      - "src/test/java/**"
+      - "target/**"
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cache files
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      # -----------------------------
+      # CodeScan Analysis - Push
+      # -----------------------------
+      - name: Run CodeScan On Push
+        if: github.event_name == 'push'
+        uses: codescan-io/codescan-scanner-action@cd9694
+        with:
+          scanChangedFilesOnly: true
+          organization: cd-8508
+          projectKey: 1-ghactions2
+          codeScanUrl: https://preview.codescan.io/
+          login: squ_91f6d32fee1b241fdadc3057ab60820b4f33904c
+          generateSarifFile: true
+
+      # -----------------------------
+      # CodeScan Analysis - PR
+      # -----------------------------
+      - name: Run CodeScan On PR
+        if: github.event_name == 'pull_request'
+        uses: codescan-io/codescan-scanner-action@cd9694
+        with:
+          scanChangedFilesOnly: true
+          organization: cd-8508
+          projectKey: 1-ghactions2
+          codeScanUrl: https://preview.codescan.io/
+          login: squ_91f6d32fee1b241fdadc3057ab60820b4f33904c
+          generateSarifFile: true
+          args: |
+            sonar.pullrequest.branch=${{ github.head_ref }}
+            sonar.pullrequest.base=${{ github.base_ref }}
+            sonar.pullrequest.key=${{ github.event.number }}
+
+      # -----------------------------
+      # Upload SARIF to GitHub
+      # -----------------------------
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: codescan.sarif
+
+      # -----------------------------
+      # Archive SARIF
+      # -----------------------------
+      - name: Archive CodeScan SARIF results
+        uses: actions/upload-artifact@v4
+        with:
+          name: codescan.sarif
+          path: codescan.sarif
