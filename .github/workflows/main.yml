@@ -46,10 +46,10 @@ jobs:
         uses: codescan-io/codescan-scanner-action@cd9694
         with:
           scanChangedFilesOnly: true
-          organization: cd-8508
-          projectKey: 1-ghactions2
+          organization: prof
+          projectKey: sarif-25
           codeScanUrl: https://preview.codescan.io/
-          login: ${{ secrets.CODESCAN_TOKEN }}
+          login: squ_91f6d32fee1b241fdadc3057ab60820b4f33904c
 
           # Enable SARIF generation
           generateSarifFile: true
@@ -63,11 +63,10 @@ jobs:
         uses: codescan-io/codescan-scanner-action@cd9694
         with:
           scanChangedFilesOnly: true
-          organization: cd-8508
-          projectKey: 1-ghactions2
+          organization: prof
+          projectKey: sarif-25
           codeScanUrl: https://preview.codescan.io/
-          login: ${{ secrets.CODESCAN_TOKEN }}
-
+          login: squ_91f6d32fee1b241fdadc3057ab60820b4f33904c
           # Enable SARIF generation
           generateSarifFile: true
           generateReportFile: true
@@ -103,7 +102,7 @@ jobs:
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v4
         with:
-          sarif_file: codescan.sarif
+          sarif_file: codescan-sarif/
 
       # -----------------------------
       # Archive SARIF as Artifact
@@ -112,4 +111,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: codescan-sarif
-          path: codescan.sarif
+          path: codescan-sarif/
