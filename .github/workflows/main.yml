@@ -18,6 +18,11 @@ on:
       - "src/test/java/**"
       - "target/**"
 
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
 jobs:
   build:
     runs-on: macos-latest
@@ -33,9 +38,6 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      # -----------------------------
-      # CodeScan Analysis - Push
-      # -----------------------------
       - name: Run CodeScan On Push
         if: github.event_name == 'push'
         uses: codescan-io/codescan-scanner-action@cd9694
@@ -44,12 +46,9 @@ jobs:
           organization: cd-8508
           projectKey: 1-ghactions2
           codeScanUrl: https://preview.codescan.io/
-          login: squ_91f6d32fee1b241fdadc3057ab60820b4f33904c
+          login: ${{ secrets.CODESCAN_TOKEN }}
           generateSarifFile: true
 
-      # -----------------------------
-      # CodeScan Analysis - PR
-      # -----------------------------
       - name: Run CodeScan On PR
         if: github.event_name == 'pull_request'
         uses: codescan-io/codescan-scanner-action@cd9694
@@ -58,26 +57,31 @@ jobs:
           organization: cd-8508
           projectKey: 1-ghactions2
           codeScanUrl: https://preview.codescan.io/
-          login: squ_91f6d32fee1b241fdadc3057ab60820b4f33904c
+          login: ${{ secrets.CODESCAN_TOKEN }}
           generateSarifFile: true
           args: |
             sonar.pullrequest.branch=${{ github.head_ref }}
             sonar.pullrequest.base=${{ github.base_ref }}
             sonar.pullrequest.key=${{ github.event.number }}
 
-      # -----------------------------
-      # Upload SARIF to GitHub
-      # -----------------------------
+      - name: Check generated SARIF file
+        run: |
+          echo "Working directory:"
+          pwd
+
+          echo "Repository files:"
+          ls -la
+
+          echo "Searching for SARIF files:"
+          find . -type f \( -name "*.sarif" -o -name "*.sarif.json" \) -print
+
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: codescan.sarif
 
-      # -----------------------------
-      # Archive SARIF
-      # -----------------------------
-      - name: Archive CodeScan SARIF results
+      - name: Archive SARIF file
         uses: actions/upload-artifact@v4
         with:
-          name: codescan.sarif
+          name: codescan-sarif
           path: codescan.sarif
