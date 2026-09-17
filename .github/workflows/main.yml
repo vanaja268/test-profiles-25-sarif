@@ -48,7 +48,7 @@ jobs:
           scanChangedFilesOnly: true
           organization: prof
           projectKey: sarif-25
-          codeScanUrl: https://preview.codescan.io/
+          codeScanUrl: https://test.codescan.io/
           login: squ_91f6d32fee1b241fdadc3057ab60820b4f33904c
 
           # Enable SARIF generation
@@ -65,7 +65,7 @@ jobs:
           scanChangedFilesOnly: true
           organization: prof
           projectKey: sarif-25
-          codeScanUrl: https://preview.codescan.io/
+          codeScanUrl: https://test.codescan.io/
           login: squ_91f6d32fee1b241fdadc3057ab60820b4f33904c
           # Enable SARIF generation
           generateSarifFile: true
