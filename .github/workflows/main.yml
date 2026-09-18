@@ -43,11 +43,11 @@ jobs:
       # -----------------------------
       - name: Run CodeScan On Push
         if: github.event_name == 'push'
-        uses: codescan-io/codescan-scanner-action@cd9694
+        uses: codescan-io/codescan-scanner-action@cd9694n
         with:
           scanChangedFilesOnly: true
           organization: prof
-          projectKey: sarif-25
+          projectKey: profiles-25-sarif
           codeScanUrl: https://test.codescan.io/
           login: squ_91f6d32fee1b241fdadc3057ab60820b4f33904c
 
@@ -60,11 +60,11 @@ jobs:
       # -----------------------------
       - name: Run CodeScan On PR
         if: github.event_name == 'pull_request'
-        uses: codescan-io/codescan-scanner-action@cd9694
+        uses: codescan-io/codescan-scanner-action@cd9694n
         with:
           scanChangedFilesOnly: true
           organization: prof
-          projectKey: sarif-25
+          projectKey: profiles-25-sarif
           codeScanUrl: https://test.codescan.io/
           login: squ_91f6d32fee1b241fdadc3057ab60820b4f33904c
           # Enable SARIF generation
@@ -102,7 +102,7 @@ jobs:
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v4
         with:
-          sarif_file: codescan-sarif/
+          sarif_file: codescan.sarif
 
       # -----------------------------
       # Archive SARIF as Artifact
@@ -111,4 +111,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: codescan-sarif
-          path: codescan-sarif/
+          path: codescan.sarif
