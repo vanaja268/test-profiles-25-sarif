@@ -43,11 +43,11 @@ jobs:
       # -----------------------------
       - name: Run CodeScan On Push
         if: github.event_name == 'push'
-        uses: codescan-io/codescan-scanner-action@cd9694n
+        uses: codescan-io/codescan-scanner-action@cd9694sarif
         with:
           scanChangedFilesOnly: true
           organization: prof
-          projectKey: profiles-25-sarif
+          projectKey: profiles-25-sarif-01
           codeScanUrl: https://test.codescan.io/
           login: squ_91f6d32fee1b241fdadc3057ab60820b4f33904c
 
@@ -60,11 +60,11 @@ jobs:
       # -----------------------------
       - name: Run CodeScan On PR
         if: github.event_name == 'pull_request'
-        uses: codescan-io/codescan-scanner-action@cd9694n
+        uses: codescan-io/codescan-scanner-action@cd9694sarif
         with:
           scanChangedFilesOnly: true
           organization: prof
-          projectKey: profiles-25-sarif
+          projectKey: profiles-25-sarif-01
           codeScanUrl: https://test.codescan.io/
           login: squ_91f6d32fee1b241fdadc3057ab60820b4f33904c
           # Enable SARIF generation
